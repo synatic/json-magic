@@ -1,0 +1,25 @@
+{
+  "name": "json-magic",
+  "version": "0.0.10",
+  "description": "Utilities for manipulating JSON objects.",
+  "homepage": "https://github.com/filepounder/json-magic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filepounder/json-magic.git"
+  },
+  "author": {
+    "name": "Martin Naude",
+    "email": "martin@filepounder.com"
+  },
+  "dependencies": {
+    "check-types": "8.0.2",
+    "json-pointer": "0.6.0"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "6.1.4"
+  }
+}
