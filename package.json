@@ -2,24 +2,42 @@
   "name": "json-magic",
   "version": "0.0.10",
   "description": "Utilities for manipulating JSON objects.",
-  "homepage": "https://github.com/filepounder/json-magic",
+  "main": "index.js",
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/filepounder/json-magic.git"
+    "url": "https://github.com/synatic/json-magic.git"
   },
+  "keywords": [
+    "json"
+  ],
   "author": {
-    "name": "Martin Naude",
-    "email": "martin@filepounder.com"
+    "name": "FilePounder Inc",
+    "url": "https://filepounder.com"
   },
-  "dependencies": {
-    "check-types": "8.0.2",
-    "json-pointer": "0.6.0"
+  "contributors": [
+    {
+      "name": "Martin Naude",
+      "email": "martin@filepounder.com"
+    },
+    {
+      "name": "Thiren Bunsee",
+      "email": "thiren@filepounder.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/synatic/json-magic/issues"
   },
+  "homepage": "https://github.com/synatic/json-magic#readme",
   "engines": {
     "node": ">=6.0.0"
   },
-  "license": "MIT",
+  "dependencies": {
+    "check-types": "10.0.0",
+    "json-pointer": "0.6.0"
+  },
   "devDependencies": {
-    "mocha": "6.1.4"
+    "mocha": "^6.2.0"
   }
 }
