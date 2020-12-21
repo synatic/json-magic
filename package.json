@@ -1,6 +1,6 @@
 {
   "name": "@synatic/json-magic",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utilities for manipulating JSON objects.",
   "main": "index.js",
   "files": [
