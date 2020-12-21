@@ -12,9 +12,15 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_size = 4
 indent_style = space
+max_line_length = 120
 
-[*.{json,yml,yaml,css,less,sass,config}]
+[{*.json,*.css,*.less,*.sass,*.config}]
 indent_size = 2
+
+[{*.conf,*.yaml,*.yml}]
+indent_size = 2
+ij_yaml_spaces_within_braces = false
+ij_yaml_spaces_within_brackets = false
 
 [*.md]
 indent_size = 2
