@@ -4,6 +4,3 @@
 build
 coverage
 .nyc_output
-
-# Third party code
-lib/JSONPointer.js

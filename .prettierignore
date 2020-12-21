@@ -7,6 +7,3 @@ coverage
 yarn.lock
 package.json
 package-lock.json
-
-# Third party code
-lib/JSONPointer.js
