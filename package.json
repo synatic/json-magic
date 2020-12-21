@@ -1,5 +1,5 @@
 {
-  "name": "json-magic",
+  "name": "@synatic/json-magic",
   "version": "0.1.0",
   "description": "Utilities for manipulating JSON objects.",
   "main": "index.js",
@@ -42,8 +42,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "check-types": "11.1.2",
-    "json-pointer": "0.6.1"
+    "check-types": "11.1.2"
   },
   "devDependencies": {
     "eslint": "^7.16.0",

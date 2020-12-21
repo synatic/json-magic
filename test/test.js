@@ -1,5 +1,5 @@
-const $check = require('check-types');
 const assert = require('assert');
+const $check = require('check-types');
 
 const $json = require('../index.js');
 
@@ -109,6 +109,10 @@ describe('JSON Magic', function () {
             assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, '/a/b'), {c: 1}, 'Invalid get');
         });
 
+        it('should get a value 4', function () {
+            assert.deepStrictEqual($json.get([{a: {b: {c: 1}}}], '0/a/b'), {c: 1}, 'Invalid get');
+        });
+
         it('should error on get a value on string', function () {
             assert.throws(
                 function () {
@@ -167,6 +171,44 @@ describe('JSON Magic', function () {
             const val = [];
             $json.set(val, '/0', 'Val1');
             assert.deepStrictEqual(val, ['Val1'], 'Invalid set');
+        });
+
+        it('should set an array value ', function () {
+            const val = {
+                a: {
+                    b: [
+                        {
+                            c: [{d: 'one', e: 1}],
+                        },
+                        {
+                            c: [{d: 'two', e: 2}],
+                        },
+                        {
+                            c: [{d: 'three', e: 3}],
+                        },
+                    ],
+                },
+            };
+            $json.set(val, ['a', 'b', '1', 'c'], [{d: 'twofix', e: 2.1}]);
+            assert.deepStrictEqual(
+                val,
+                {
+                    a: {
+                        b: [
+                            {
+                                c: [{d: 'one', e: 1}],
+                            },
+                            {
+                                c: [{d: 'twofix', e: 2.1}],
+                            },
+                            {
+                                c: [{d: 'three', e: 3}],
+                            },
+                        ],
+                    },
+                },
+                'Invalid set'
+            );
         });
 
         it('should set a value 4', function () {
@@ -228,6 +270,10 @@ describe('JSON Magic', function () {
             const val = {a: {b: {c: 1, d: 2}, x: 'abc'}};
             assert.deepStrictEqual($json.pathDict(val, 'dot'), {'a.b.c': 1, 'a.b.d': 2, 'a.x': 'abc'}, 'Invalid paths');
         });
+        it('should get a pathDict with dot', function () {
+            const val = [{a: {b: {c: 1, d: 2}}}];
+            assert.deepStrictEqual($json.pathDict(val, 'dot'), {'0.a.b.c': 1, '0.a.b.d': 2}, 'Invalid paths');
+        });
     });
 
     describe('path array', function () {
@@ -288,6 +334,24 @@ describe('JSON Magic', function () {
                 walkedVals[path] = value;
             });
             assert.deepStrictEqual(walkedVals, {'/a/b/c': 1, '/a/b/d': 2, '/a/x': 'abc'}, 'Invalid walk');
+        });
+
+        it('should walk an array', function () {
+            const val = {a: {b: {c: 1, d: 2}, x: [{length: 10}, {a: 1}]}};
+            const walkedVals = {};
+            $json.walk(val, function (value, path) {
+                walkedVals[path] = value;
+            });
+            assert.deepStrictEqual(
+                walkedVals,
+                {
+                    '/a/b/c': 1,
+                    '/a/b/d': 2,
+                    '/a/x/0/length': 10,
+                    '/a/x/1/a': 1,
+                },
+                'Invalid walk'
+            );
         });
 
         it('should walk dot', function () {
@@ -571,6 +635,51 @@ describe('JSON Magic', function () {
                     {_x: [{_z_y: 35}, {_z_y: 45}]},
                 ],
                 'Invalid fix for mongo'
+            );
+        });
+    });
+
+    describe('set property', function () {
+        it('should set on null', function () {
+            assert.deepStrictEqual($json.setProperty(null, 'val', 'value'), null, 'Invalid set property');
+        });
+
+        it('should set on string', function () {
+            assert.deepStrictEqual($json.setProperty('xxx', 'val', 'value'), 'xxx', 'Invalid set property');
+        });
+
+        it('should set on object', function () {
+            assert.deepStrictEqual($json.setProperty({a: 1}, 'val', 'value'), {a: 1, val: 'value'}, 'Invalid set property');
+        });
+
+        it('should set on object without no override', function () {
+            assert.deepStrictEqual($json.setProperty({a: 1, val: 2}, 'val', 'value'), {a: 1, val: 2}, 'Invalid set property');
+        });
+
+        it('should set on object with override', function () {
+            assert.deepStrictEqual(
+                $json.setProperty({a: 1, val: 2}, 'val', 'value', true),
+                {
+                    a: 1,
+                    val: 'value',
+                },
+                'Invalid set property'
+            );
+        });
+
+        it('should set on object complex', function () {
+            assert.deepStrictEqual(
+                $json.setProperty({a: 1, b: {c: 2}, d: [{e: 1}, {e: 2}]}, 'val', 'value'),
+                {
+                    a: 1,
+                    val: 'value',
+                    b: {val: 'value', c: 2},
+                    d: [
+                        {e: 1, val: 'value'},
+                        {e: 2, val: 'value'},
+                    ],
+                },
+                'Invalid set property'
             );
         });
     });
