@@ -1,1 +1,1 @@
-module.exports=require('./lib/Magic');
+module.exports = require('./lib/Magic');
