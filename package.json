@@ -3,7 +3,17 @@
   "version": "0.0.10",
   "description": "Utilities for manipulating JSON objects.",
   "main": "index.js",
-  "scripts": {},
+  "files": [
+    "lib/",
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier . --write",
+    "test": "mocha --reporter spec --bail --check-leaks test/",
+    "test-ci": "nyc --reporter text-summary mocha -- --reporter spec --check-leaks test/",
+    "test-cov": "nyc --reporter lcov --reporter text mocha -- --reporter dot --check-leaks test/"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/synatic/json-magic.git"
@@ -13,16 +23,14 @@
   ],
   "author": {
     "name": "FilePounder Inc",
-    "url": "https://filepounder.com"
+    "url": "https://synatic.com"
   },
   "contributors": [
     {
-      "name": "Martin Naude",
-      "email": "martin@filepounder.com"
+      "name": "Martin Naude"
     },
     {
-      "name": "Thiren Bunsee",
-      "email": "thiren@filepounder.com"
+      "name": "Thiren Bunsee"
     }
   ],
   "license": "MIT",
@@ -31,13 +39,18 @@
   },
   "homepage": "https://github.com/synatic/json-magic#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=12"
   },
   "dependencies": {
     "check-types": "10.0.0",
     "json-pointer": "0.6.0"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "eslint": "^7.16.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^7.1.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "prettier": "^2.2.1"
   }
 }
