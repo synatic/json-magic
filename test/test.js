@@ -30,38 +30,31 @@ describe('JSON Magic', function () {
         });
 
         it('should parse ignoring separator', function () {
-            let val = $json.parsePath('a$$b$$c', '$$', true);
-            assert.deepStrictEqual(val, ['a$$b$$c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('a$$b$$c', '$$', true), ['a$$b$$c'], 'Invalid parse');
         });
 
         it('should parse ignoring separator with a leading dot', function () {
-            let val = $json.parsePath('.a.b.c', null, true);
-            assert.deepStrictEqual(val, ['a.b.c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('.a.b.c', null, true), ['a.b.c'], 'Invalid parse');
         });
 
         it('should parse ignoring separator with a leading slash', function () {
-            let val = $json.parsePath('/a/b/c', null, true);
-            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('/a/b/c', null, true), ['a/b/c'], 'Invalid parse');
         });
 
         it('should parse unknown separator path ignoring separator', function () {
-            let val = $json.parsePath('.a/b/c', null, true);
-            assert.deepStrictEqual(val, ['.a/b/c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('.a/b/c', null, true), ['.a/b/c'], 'Invalid parse');
         });
 
         it('should parse specified dot separator path ignoring separator', function () {
-            let val = $json.parsePath('.a/b/c', '.', true);
-            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('.a/b/c', '.', true), ['a/b/c'], 'Invalid parse');
         });
 
         it('should parse specified text dot separator path ignoring separator', function () {
-            let val = $json.parsePath('.a/b/c', 'dot', true);
-            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('.a/b/c', 'dot', true), ['a/b/c'], 'Invalid parse');
         });
 
         it('should parse specified slash separator path ignoring separator', function () {
-            let val = $json.parsePath('/a.b.c', '/', true);
-            assert.deepStrictEqual(val, ['a.b.c'], 'Invalid parse');
+            assert.deepStrictEqual($json.parsePath('/a.b.c', '/', true), ['a.b.c'], 'Invalid parse');
         });
     });
 
