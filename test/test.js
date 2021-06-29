@@ -25,8 +25,43 @@ describe('JSON Magic', function () {
             assert.deepStrictEqual($json.parsePath('/a.b.c'), ['/a', 'b', 'c'], 'Invalid parse');
         });
 
-        it('should parse ua specified spearator', function () {
+        it('should parse a specified separator', function () {
             assert.deepStrictEqual($json.parsePath('a$$b$$c', '$$'), ['a', 'b', 'c'], 'Invalid parse');
+        });
+
+        it('should parse ignoring separator', function () {
+            let val = $json.parsePath('a$$b$$c', '$$', true);
+            assert.deepStrictEqual(val, ['a$$b$$c'], 'Invalid parse');
+        });
+
+        it('should parse ignoring separator with a leading dot', function () {
+            let val = $json.parsePath('.a.b.c', null, true);
+            assert.deepStrictEqual(val, ['a.b.c'], 'Invalid parse');
+        });
+
+        it('should parse ignoring separator with a leading slash', function () {
+            let val = $json.parsePath('/a/b/c', null, true);
+            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+        });
+
+        it('should parse unknown separator path ignoring separator', function () {
+            let val = $json.parsePath('.a/b/c', null, true);
+            assert.deepStrictEqual(val, ['.a/b/c'], 'Invalid parse');
+        });
+
+        it('should parse specified dot separator path ignoring separator', function () {
+            let val = $json.parsePath('.a/b/c', '.', true);
+            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+        });
+
+        it('should parse specified text dot separator path ignoring separator', function () {
+            let val = $json.parsePath('.a/b/c', 'dot', true);
+            assert.deepStrictEqual(val, ['a/b/c'], 'Invalid parse');
+        });
+
+        it('should parse specified slash separator path ignoring separator', function () {
+            let val = $json.parsePath('/a.b.c', '/', true);
+            assert.deepStrictEqual(val, ['a.b.c'], 'Invalid parse');
         });
     });
 
@@ -142,7 +177,66 @@ describe('JSON Magic', function () {
                 'Invalid Error thrown'
             );
         });
+
+        it('should get a value ignoring separator 1', function () {
+            assert.deepStrictEqual($json.get({"b/c": 1}, '/b/c', null, true), 1, 'Invalid get');
+        });
+
+        it('should get a value ignoring separator 2', function () {
+            assert.deepStrictEqual($json.get({"b/c/d": 1}, '/b/c/d', null, true), 1, 'Invalid get');
+        });
+
+        it('should get a value ignoring separator 3', function () {
+            assert.deepStrictEqual($json.get({"b.c": 1}, '/b.c', null, true), 1, 'Invalid get');
+        });
+
+        it('should get a value ignoring separator 4', function () {
+            assert.deepStrictEqual($json.get({"b.c.d": 1}, '.b.c.d', null, true), 1, 'Invalid get');
+        });
+
+        it('should throw an error on an invalid path ignoring separator', function () {
+            assert.throws(
+                function () {
+                    // eslint-disable-next-line no-unused-vars
+                    const val = $json.get({"b.c.d": 1}, '/b.c.d', null, true);
+                },
+                Error,
+                'Invalid Get error'
+            );
+        });
+
+        it('should get a value on a dot path ignoring separator', function () {
+            assert.deepStrictEqual($json.get({"b.c": 1}, '.b.c', '.', true), 1, 'Invalid get');
+        });
+
+        it('should get a value without ignoring separator 1', function () {
+            assert.deepStrictEqual($json.get({b: {c: 1}}, '/b/c', null, false), 1, 'Invalid get');
+        });
+
+        it('should get a value without ignoring separator 2', function () {
+            assert.deepStrictEqual($json.get({b: {c: {d: 1}}}, '/b/c/d', null, false), 1, 'Invalid get');
+        });
+
+        it('should get a value without ignoring separator 3', function () {
+            assert.deepStrictEqual($json.get({"b.c": 1}, '/b.c', null, false), 1, 'Invalid get');
+        });
+
+        it('should get a value without ignoring separator 4', function () {
+            assert.deepStrictEqual($json.get({b: {c: {d: 1}}}, '.b.c.d', null, false), 1, 'Invalid get');
+        });
+
+        it('should throw an error on an invalid path without ignoring separator', function () {
+            assert.throws(
+                function () {
+                    // eslint-disable-next-line no-unused-vars
+                    const val = $json.get({"b.c.d": 1}, '/b.c.d', null, false);
+                },
+                Error,
+                'Invalid Get error'
+            );
+        });
     });
+
 
     describe('set attribute', function () {
         it('should set a value 1 ', function () {
@@ -162,7 +256,7 @@ describe('JSON Magic', function () {
             $json.set(val, '/a/b', {c: 1});
             assert.deepStrictEqual(val, {a: {b: {c: 1}}}, 'Invalid set');
         });
-        it('should set a value 4 ', function () {
+        it('should set a value 4', function () {
             const val = {};
             $json.set(val, 'a', '1');
             assert.deepStrictEqual(val, {a: '1'}, 'Invalid set');
@@ -211,7 +305,7 @@ describe('JSON Magic', function () {
             );
         });
 
-        it('should set a value 4', function () {
+        it('should set a value 6', function () {
             const val = {a: {b: {c: null}}};
             $json.set(val, '/a/b/c', 1);
             assert.deepStrictEqual(val, {a: {b: {c: 1}}}, 'Invalid set');
@@ -237,6 +331,54 @@ describe('JSON Magic', function () {
                 Error,
                 'Invalid Error thrown'
             );
+        });
+
+        it('should set a value ignoring separator 1', function () {
+            const val = {};
+            $json.set(val, '/a/b', 1, true);
+            assert.deepStrictEqual(val, {'a/b': 1}, 'Invalid set');
+        });
+
+        it('should set a value ignoring separator 2', function () {
+            const val = {};
+            $json.set(val, '/a/b/c', 1, true);
+            assert.deepStrictEqual(val, {'a/b/c': 1}, 'Invalid set');
+        });
+
+        it('should set a value ignoring separator 3', function () {
+            const val = {};
+            $json.set(val, '/a.b', 1, true);
+            assert.deepStrictEqual(val, {'a.b': 1}, 'Invalid set');
+        });
+
+        it('should set a value without ignoring separator 1', function () {
+            const val = {};
+            $json.set(val, '/a/b', 1, false);
+            assert.deepStrictEqual(val, {a: {b: 1}}, 'Invalid set');
+        });
+
+        it('should set a value without ignoring separator 2', function () {
+            const val = {};
+            $json.set(val, '/a/b/c', 1, false);
+            assert.deepStrictEqual(val, {a: {b: {c: 1}}}, 'Invalid set');
+        });
+
+        it('should set a value without ignoring separator 3', function () {
+            const val = {};
+            $json.set(val, '/a.b.c', 1, false);
+            assert.deepStrictEqual(val, {'/a': {b: {c: 1}}}, 'Invalid set');
+        });
+
+        it('should set a value without ignoring separator 4', function () {
+            const val = {};
+            $json.set(val, '/a.b', 1, false);
+            assert.deepStrictEqual(val, {'a.b': 1}, 'Invalid set');
+        });
+
+        it('should set a value without ignoring separator 5', function () {
+            const val = {};
+            $json.set(val, '.a/b', 1, false);
+            assert.deepStrictEqual(val, {'.a' : {b: 1}}, 'Invalid set');
         });
     });
 
@@ -270,7 +412,7 @@ describe('JSON Magic', function () {
             const val = {a: {b: {c: 1, d: 2}, x: 'abc'}};
             assert.deepStrictEqual($json.pathDict(val, 'dot'), {'a.b.c': 1, 'a.b.d': 2, 'a.x': 'abc'}, 'Invalid paths');
         });
-        it('should get a pathDict with dot', function () {
+        it('should get a pathDict with dot 3', function () {
             const val = [{a: {b: {c: 1, d: 2}}}];
             assert.deepStrictEqual($json.pathDict(val, 'dot'), {'0.a.b.c': 1, '0.a.b.d': 2}, 'Invalid paths');
         });
