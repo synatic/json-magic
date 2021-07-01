@@ -1,6 +1,6 @@
 {
   "name": "@synatic/json-magic",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Utilities for manipulating JSON objects.",
   "main": "index.js",
   "files": [
@@ -47,8 +47,8 @@
   "devDependencies": {
     "eslint": "^7.16.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^7.1.0",
-    "mocha": "^8.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "mocha": "^9.0.1",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1"
   }
