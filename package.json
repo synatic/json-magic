@@ -42,7 +42,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "check-types": "11.1.2"
+    "check-types": "11.2.2"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
