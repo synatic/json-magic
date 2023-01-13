@@ -126,7 +126,10 @@ describe('JSON Magic', function () {
 
     describe('get attribute', function () {
         it('should get a value 1 ', function () {
-            assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, '.a.b.c'), 1, 'Invalid get');
+            const obj = new Error('test');
+            obj.a = {b: {c: 1}};
+
+            assert.deepStrictEqual($json.get(obj, '.a.b.c'), 1, 'Invalid get');
         });
 
         it('should get a value 2', function () {
@@ -172,26 +175,26 @@ describe('JSON Magic', function () {
         });
 
         it('should get a value ignoring separator 1', function () {
-            assert.deepStrictEqual($json.get({"b/c": 1}, '/b/c', null, true), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b/c': 1}, '/b/c', null, true), 1, 'Invalid get');
         });
 
         it('should get a value ignoring separator 2', function () {
-            assert.deepStrictEqual($json.get({"b/c/d": 1}, '/b/c/d', null, true), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b/c/d': 1}, '/b/c/d', null, true), 1, 'Invalid get');
         });
 
         it('should get a value ignoring separator 3', function () {
-            assert.deepStrictEqual($json.get({"b.c": 1}, '/b.c', null, true), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b.c': 1}, '/b.c', null, true), 1, 'Invalid get');
         });
 
         it('should get a value ignoring separator 4', function () {
-            assert.deepStrictEqual($json.get({"b.c.d": 1}, '.b.c.d', null, true), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b.c.d': 1}, '.b.c.d', null, true), 1, 'Invalid get');
         });
 
         it('should throw an error on an invalid path ignoring separator', function () {
             assert.throws(
                 function () {
                     // eslint-disable-next-line no-unused-vars
-                    const val = $json.get({"b.c.d": 1}, '/b.c.d', null, true);
+                    const val = $json.get({'b.c.d': 1}, '/b.c.d', null, true);
                 },
                 Error,
                 'Invalid Get error'
@@ -199,7 +202,7 @@ describe('JSON Magic', function () {
         });
 
         it('should get a value on a dot path ignoring separator', function () {
-            assert.deepStrictEqual($json.get({"b.c": 1}, '.b.c', '.', true), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b.c': 1}, '.b.c', '.', true), 1, 'Invalid get');
         });
 
         it('should get a value without ignoring separator 1', function () {
@@ -211,7 +214,7 @@ describe('JSON Magic', function () {
         });
 
         it('should get a value without ignoring separator 3', function () {
-            assert.deepStrictEqual($json.get({"b.c": 1}, '/b.c', null, false), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({'b.c': 1}, '/b.c', null, false), 1, 'Invalid get');
         });
 
         it('should get a value without ignoring separator 4', function () {
@@ -222,14 +225,13 @@ describe('JSON Magic', function () {
             assert.throws(
                 function () {
                     // eslint-disable-next-line no-unused-vars
-                    const val = $json.get({"b.c.d": 1}, '/b.c.d', null, false);
+                    const val = $json.get({'b.c.d': 1}, '/b.c.d', null, false);
                 },
                 Error,
                 'Invalid Get error'
             );
         });
     });
-
 
     describe('set attribute', function () {
         it('should set a value 1 ', function () {
@@ -371,7 +373,7 @@ describe('JSON Magic', function () {
         it('should set a value without ignoring separator 5', function () {
             const val = {};
             $json.set(val, '.a/b', 1, false);
-            assert.deepStrictEqual(val, {'.a' : {b: 1}}, 'Invalid set');
+            assert.deepStrictEqual(val, {'.a': {b: 1}}, 'Invalid set');
         });
     });
 
@@ -771,6 +773,66 @@ describe('JSON Magic', function () {
                 ],
                 'Invalid fix for mongo'
             );
+        });
+
+        it('should fix an Error for mongo', function () {
+            class TestMongoError extends Error {
+                constructor(message, details = {}) {
+                    super(message);
+                    for (const detailsKey in details) {
+                        if (details.hasOwnProperty(detailsKey)) {
+                            this[detailsKey] = details[detailsKey];
+                        }
+                    }
+                }
+            }
+
+            const clusterTime = new Date();
+            const error = new TestMongoError('Some error', {
+                $clusterTime: clusterTime,
+            });
+
+            let val = error;
+            val = $json.fixForMongo(val);
+            assert.deepStrictEqual(val, {
+                name: error.name,
+                message: error.message,
+                _clusterTime: error.$clusterTime.toISOString(),
+                stack: error.stack,
+            });
+        });
+
+        it('should fix an Error with circular properties for mongo', function () {
+            class TestMongoError extends Error {
+                constructor(message, details = {}) {
+                    super(message);
+                    for (const detailsKey in details) {
+                        if (details.hasOwnProperty(detailsKey)) {
+                            this[detailsKey] = details[detailsKey];
+                        }
+                    }
+                }
+            }
+
+            const clusterTime = new Date();
+            const error = new TestMongoError('Some error', {
+                $clusterTime: clusterTime,
+            });
+            error.testProperty = {
+                recursiveError: error,
+            };
+
+            let val = error;
+            val = $json.fixForMongo(val);
+            assert.deepStrictEqual(val, {
+                name: error.name,
+                message: error.message,
+                _clusterTime: error.$clusterTime.toISOString(),
+                stack: error.stack,
+                testProperty: {
+                    recursiveError: '[Circular]',
+                },
+            });
         });
     });
 
