@@ -126,10 +126,7 @@ describe('JSON Magic', function () {
 
     describe('get attribute', function () {
         it('should get a value 1 ', function () {
-            const obj = new Error('test');
-            obj.a = {b: {c: 1}};
-
-            assert.deepStrictEqual($json.get(obj, '.a.b.c'), 1, 'Invalid get');
+            assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, '.a.b.c'), 1, 'Invalid get');
         });
 
         it('should get a value 2', function () {
