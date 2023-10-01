@@ -42,7 +42,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "check-types": "11.2.2",
+    "check-types": "11.2.3",
     "serialize-error": "8.1.0"
   },
   "devDependencies": {
