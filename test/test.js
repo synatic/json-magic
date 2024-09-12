@@ -1,5 +1,6 @@
 const assert = require('assert');
 const $check = require('check-types');
+const {ObjectId, Binary, Timestamp} = require('bson');
 
 const $json = require('../index.js');
 
@@ -248,11 +249,13 @@ describe('JSON Magic', function () {
             $json.set(val, '/a/b', {c: 1});
             assert.deepStrictEqual(val, {a: {b: {c: 1}}}, 'Invalid set');
         });
+
         it('should set a value 4', function () {
             const val = {};
             $json.set(val, 'a', '1');
             assert.deepStrictEqual(val, {a: '1'}, 'Invalid set');
         });
+
         it('should set a value 5 ', function () {
             const val = [];
             $json.set(val, '/0', 'Val1');
@@ -621,7 +624,8 @@ describe('JSON Magic', function () {
             val = $json.changeValue(val, (val, path) => {
                 return val;
             });
-            assert.deepStrictEqual(val, {a: {b: {c: 1, d: 2}, x: 'abc'}}, 'Invalid kchange val');
+
+            assert.deepStrictEqual(val, {a: {b: {c: 1, d: 2}, x: 'abc'}}, 'Invalid change val');
         });
 
         it('should change a value', function () {
@@ -662,6 +666,26 @@ describe('JSON Magic', function () {
                 },
                 'Invalid key rename'
             );
+        });
+
+        it('should change a value containing BSON data and be able to stringify the output', function () {
+            const value = {
+                a: 'a',
+                _id: new ObjectId(),
+                binary: new Binary(Buffer.from('binary')),
+                nested: {
+                    b: 1,
+                    timestamp: new Timestamp(0xffffffffffffffffn)
+                }
+            };
+
+            const newValue = $json.changeValue(value, (val, path) => {
+                return {value: val};
+            });
+
+            const newValueString = JSON.stringify(newValue);
+
+            assert.strictEqual(JSON.stringify(value), newValueString, 'Invalid change val');
         });
 
         it('should change a string ', function () {
