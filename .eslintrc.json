@@ -1,28 +1,18 @@
 {
   "env": {
-    "node": true,
-    "commonjs": true,
-    "es6": true,
-    "mocha": true
+    "node": true
   },
-  "extends": ["eslint:recommended", "google", "prettier"],
+  "extends": ["@synatic/eslint-config-synatic-node"],
   "globals": {},
   "parserOptions": {
     "ecmaVersion": 2022
   },
+  "overrides": [],
   "rules": {
-    "indent": ["error", 4, {"SwitchCase": 1}],
-    "max-len": ["off"],
-    "no-prototype-builtins": "off",
-    "require-jsdoc": [
-      "warn",
-      {
-        "require": {
-          "FunctionDeclaration": true,
-          "MethodDefinition": true,
-          "ClassDeclaration": true
-        }
-      }
-    ]
+    "prettier/prettier": "warn",
+    "sonarjs/prefer-single-boolean-return": "warn",
+    "no-prototype-builtins": "warn",
+    "curly": ["error", "all"],
+    "sonarjs/no-duplicated-branches": "warn"
   }
 }

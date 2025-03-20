@@ -527,7 +527,9 @@ describe('JSON Magic', function () {
             let val = {a: {b: {c: 1, d: 2}, x: 'abc'}};
 
             val = $json.renameKey(val, (key, path) => {
-                if (key === 'c') return 'r';
+                if (key === 'c') {
+                    return 'r';
+                }
             });
             assert.deepStrictEqual(val, {a: {b: {r: 1, d: 2}, x: 'abc'}}, 'Invalid key rename');
         });
@@ -544,8 +546,11 @@ describe('JSON Magic', function () {
             };
 
             val = $json.renameKey(val, (key, path) => {
-                if (key === 'c') return 'r';
-                else if (key === 'x') return 'x2';
+                if (key === 'c') {
+                    return 'r';
+                } else if (key === 'x') {
+                    return 'x2';
+                }
             });
             assert.deepStrictEqual(
                 val,
@@ -566,8 +571,12 @@ describe('JSON Magic', function () {
             let val = require('./data/complex-json-object.json');
 
             val = $json.renameKey(val, (key, path) => {
-                if (!key) return key;
-                if (!$check.string(key)) return key;
+                if (!key) {
+                    return key;
+                }
+                if (!$check.string(key)) {
+                    return key;
+                }
                 if (key.startsWith('$')) {
                     key = '_' + key.substring(1);
                 }
@@ -610,8 +619,11 @@ describe('JSON Magic', function () {
             let val = 'abc';
 
             val = $json.renameKey(val, (key, path) => {
-                if (key === 'c') return 'r';
-                else if (key === 'x') return 'x2';
+                if (key === 'c') {
+                    return 'r';
+                } else if (key === 'x') {
+                    return 'x2';
+                }
             });
             assert.deepStrictEqual(val, 'abc', 'Invalid key rename');
         });
@@ -632,8 +644,11 @@ describe('JSON Magic', function () {
             let val = {a: {b: {c: 1, d: 2}, x: 'abc'}};
 
             val = $json.changeValue(val, (val, path) => {
-                if (val === 2) return 20;
-                else return val;
+                if (val === 2) {
+                    return 20;
+                } else {
+                    return val;
+                }
             });
             assert.deepStrictEqual(val, {a: {b: {c: 1, d: 20}, x: 'abc'}}, 'Invalid key rename');
         });
@@ -650,8 +665,11 @@ describe('JSON Magic', function () {
             };
 
             val = $json.changeValue(val, (val, path) => {
-                if (val === 2) return 20;
-                else return val;
+                if (val === 2) {
+                    return 20;
+                } else {
+                    return val;
+                }
             });
             assert.deepStrictEqual(
                 val,
@@ -675,8 +693,8 @@ describe('JSON Magic', function () {
                 binary: new Binary(Buffer.from('binary')),
                 nested: {
                     b: 1,
-                    timestamp: new Timestamp(0xffffffffffffffffn)
-                }
+                    timestamp: new Timestamp(0xffffffffffffffffn),
+                },
             };
 
             const newValue = $json.changeValue(value, (val, path) => {
@@ -692,8 +710,11 @@ describe('JSON Magic', function () {
             let val = 'abc';
 
             val = $json.renameKey(val, (key, path) => {
-                if (val === 2) return 20;
-                else return val;
+                if (val === 2) {
+                    return 20;
+                } else {
+                    return val;
+                }
             });
             assert.deepStrictEqual(val, 'abc', 'Invalid key rename');
         });
