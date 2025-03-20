@@ -3,9 +3,11 @@
   "version": "1.1.0",
   "description": "Utilities for manipulating JSON objects.",
   "main": "index.js",
+  "types": "index.d.ts",
   "files": [
     "lib/",
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
   "scripts": {
     "lint": "eslint .",
