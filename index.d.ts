@@ -5,17 +5,17 @@
 /**
  * A path into a JSON object, can be either a string (slash or dot notation) or array of string path segments
  */
-export type JSONPath = string | string[];
+type JSONPath = string | string[];
 
 /**
  * Dictionary mapping paths to values
  */
-export type Dictionary<T = any> = Record<string, T>;
+type Dictionary<T = any> = Record<string, T>;
 
 /**
  * An object with a path and value
  */
-export interface PathValuePair {
+interface PathValuePair {
     path: string;
     value: any;
 }
@@ -23,114 +23,22 @@ export interface PathValuePair {
 /**
  * A function that is called for each value in a walk operation
  */
-export type IteratorFunction = (value: any, path: string) => void;
+type IteratorFunction = (value: any, path: string) => void;
 
 /**
  * A function that determines if a key should be renamed
  */
-export type RenamerFunction = (key: string | number, path: string) => string | number | null | undefined;
+type RenamerFunction = (key: string | number, path: string) => string | number | null | undefined;
 
 /**
  * A function that changes a value
  */
-export type ChangerFunction = (value: any, path: string) => any;
+type ChangerFunction = (value: any, path: string) => any;
 
 /**
- * JSONPointer API provides methods for manipulating JSON objects using JSON Pointer
+ * Magic JSON utility library
  */
-export interface JSONPointerAPI {
-    (obj: any, pointer?: JSONPath, value?: any): any;
-    get(obj: any, pointer: JSONPath): any;
-    set(obj: any, pointer: JSONPath, value: any): JSONPointerAPI;
-    remove(obj: any, pointer: JSONPath): void;
-    dict(obj: any, descend?: (value: any) => boolean): Dictionary;
-    walk(obj: any, iterator: IteratorFunction, descend?: (value: any) => boolean): void;
-    has(obj: any, pointer: JSONPath): boolean;
-    escape(str: string): string;
-    unescape(str: string): string;
-    parse(pointer: string): string[];
-    compile(refTokens: string[]): string;
-}
-
-/**
- * Magic class provides utilities for manipulating JSON objects and arrays
- */
-export class Magic {
-    /**
-     * Parse a string path to an array
-     */
-    static parsePath(path: JSONPath, separator?: string | null, ignoreSeparator?: boolean): string[] | null;
-
-    /**
-     * Compiles an array to a path
-     */
-    static compilePath(path: string[], separator?: string, ignoreLeading?: boolean): string | null;
-
-    /**
-     * Check if the path is in the object
-     */
-    static has(obj: any, path: JSONPath): boolean;
-
-    /**
-     * Lookup a value in an object by path
-     */
-    static get(obj: any, path: JSONPath, separator?: string | null, ignoreSeparator?: boolean): any;
-
-    /**
-     * Set a value for the path on the specified object
-     */
-    static set(obj: any, path: JSONPath, value: any, ignoreSeparator?: boolean): any;
-
-    /**
-     * Removes the value at the specified path
-     */
-    static remove(obj: any, path: JSONPath): any;
-
-    /**
-     * Returns a dictionary of paths generated from the object
-     */
-    static pathDict(obj: any, separator?: string): Dictionary;
-
-    /**
-     * Returns an array of paths defined in the object
-     */
-    static pathArray(obj: any, format?: string): PathValuePair[];
-
-    /**
-     * Walk an object or array and call an iterator function
-     */
-    static walk(obj: any, iterator: IteratorFunction, separator?: string): void;
-
-    /**
-     * Renames a key by the renamer function
-     */
-    static renameKey(obj: any, renamer: RenamerFunction, separator?: string): any;
-
-    /**
-     * Changes a value in an object passing each value to the changer function
-     */
-    static changeValue(obj: any, changer: ChangerFunction, separator?: string): any;
-
-    /**
-     * Converts all dates to ISOStrings
-     */
-    static convertDateTOISOString(obj: any): any;
-
-    /**
-     * Fixes an object or array to remove any fields starting with $ that can cause issues storing in mongo
-     */
-    static fixForMongo(obj: any): any;
-
-    /**
-     * Sets a property and value on each object and subObject
-     */
-    static setProperty(obj: any, property: string, value: any, override?: boolean): any;
-}
-
-/**
- * The exported instance with all Magic's static methods as instance methods
- */
-interface MagicInstance {
+declare const $json: {
     /**
      * Parse a string path to an array
      * @example
@@ -366,7 +274,6 @@ interface MagicInstance {
      * // obj is now {a: 1, val: 'value'}
      */
     setProperty(obj: any, property: string, value: any, override?: boolean): any;
-}
+};
 
-declare const instance: MagicInstance;
-export default instance;
+export = $json;
