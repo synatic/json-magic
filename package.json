@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "check-types": "11.2.3",
-    "serialize-error": "8.1.0"
+    "serialize-error": "11.0.3"
   },
   "devDependencies": {
     "@synatic/eslint-config-synatic-node": "^2.0.0",
