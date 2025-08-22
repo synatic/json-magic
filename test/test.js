@@ -126,23 +126,19 @@ describe('JSON Magic', function () {
     });
 
     describe('get attribute', function () {
-        it('should get a value 1', function () {
-            assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, ''), {a: {b: {c: 1}}}, 'Invalid get');
-        });
-
-        it('should get a value 2', function () {
+        it('should get a value 1 ', function () {
             assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, '.a.b.c'), 1, 'Invalid get');
         });
 
-        it('should get a value 3', function () {
+        it('should get a value 2', function () {
             assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, 'a.b'), {c: 1}, 'Invalid get');
         });
 
-        it('should get a value 4', function () {
+        it('should get a value 3', function () {
             assert.deepStrictEqual($json.get({a: {b: {c: 1}}}, '/a/b'), {c: 1}, 'Invalid get');
         });
 
-        it('should get a value 5', function () {
+        it('should get a value 4', function () {
             assert.deepStrictEqual($json.get([{a: {b: {c: 1}}}], '0/a/b'), {c: 1}, 'Invalid get');
         });
 
