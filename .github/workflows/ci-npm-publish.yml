@@ -3,6 +3,10 @@ name: "NPM Publish"
 on:
   release:
     types: [created]
+      
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
@@ -10,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [16.x, 18.x, 20.x, 22.x, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -37,10 +41,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org/
       # Skip post-install scripts here, as a malicious
       # script could steal NODE_AUTH_TOKEN.
@@ -49,5 +53,3 @@ jobs:
 
       - name: Run NPM publish
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN_SYNATIC}}
