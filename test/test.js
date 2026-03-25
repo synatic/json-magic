@@ -876,6 +876,63 @@ describe('JSON Magic', function () {
                 },
             });
         });
+
+        it('should preserve and sanitize custom error fields (including nested)', function () {
+            class TestMongoError extends Error {
+                constructor(message, details = {}) {
+                    super(message);
+                    for (const detailsKey in details) {
+                        if (details.hasOwnProperty(detailsKey)) {
+                            this[detailsKey] = details[detailsKey];
+                        }
+                    }
+                }
+            }
+
+            const error = new TestMongoError('Some error', {
+                $clusterTime: new Date('2020-01-01T00:00:00Z'),
+                'x.y': {
+                    '$z.q': 3,
+                },
+            });
+
+            const val = $json.fixForMongo(error);
+
+            assert.strictEqual(val.name, error.name);
+            assert.strictEqual(val.message, error.message);
+            assert.strictEqual(val.stack, error.stack);
+            assert.strictEqual(val._clusterTime, '2020-01-01T00:00:00.000Z');
+            assert.deepStrictEqual(val.x_y, { _z_q: 3 });
+        });
+
+        it('should serialize and sanitize error cause chain', function () {
+            class TestMongoError extends Error {
+                constructor(message, details = {}) {
+                    super(message);
+                    for (const detailsKey in details) {
+                        if (details.hasOwnProperty(detailsKey)) {
+                            this[detailsKey] = details[detailsKey];
+                        }
+                    }
+                }
+            }
+
+            const inner = new TestMongoError('Inner', { $innerKey: 1, 'a.b': 2 });
+            const outer = new TestMongoError('Outer', { cause: inner });
+
+            const val = $json.fixForMongo(outer);
+
+            assert.strictEqual(val.name, outer.name);
+            assert.strictEqual(val.message, outer.message);
+            assert.strictEqual(val.stack, outer.stack);
+            assert.deepStrictEqual(val.cause, {
+                _innerKey: 1,
+                a_b: 2,
+                name: inner.name,
+                message: inner.message,
+                stack: inner.stack,
+            });
+        });
     });
 
     describe('set property', function () {
