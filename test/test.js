@@ -902,7 +902,7 @@ describe('JSON Magic', function () {
             assert.strictEqual(val.message, error.message);
             assert.strictEqual(val.stack, error.stack);
             assert.strictEqual(val._clusterTime, '2020-01-01T00:00:00.000Z');
-            assert.deepStrictEqual(val.x_y, { _z_q: 3 });
+            assert.deepStrictEqual(val.x_y, {_z_q: 3});
         });
 
         it('should serialize and sanitize error cause chain', function () {
@@ -917,8 +917,8 @@ describe('JSON Magic', function () {
                 }
             }
 
-            const inner = new TestMongoError('Inner', { $innerKey: 1, 'a.b': 2 });
-            const outer = new TestMongoError('Outer', { cause: inner });
+            const inner = new TestMongoError('Inner', {$innerKey: 1, 'a.b': 2});
+            const outer = new TestMongoError('Outer', {cause: inner});
 
             const val = $json.fixForMongo(outer);
 

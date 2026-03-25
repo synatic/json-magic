@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "bson": "^6.8.0",
+    "bson": "^7.2.0",
     "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
