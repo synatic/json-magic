@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "check-types": "11.2.3",
-    "serialize-error": "^13.0.1"
+    "serialize-error": "13.0.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
