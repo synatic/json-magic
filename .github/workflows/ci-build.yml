@@ -28,10 +28,10 @@ jobs:
       # script could steal NODE_AUTH_TOKEN.
       - name: Install NPM dependencies
         run: npm install --ignore-scripts
-
+      - name: Audit packages
+        run: npm audit --audit-level=high --omit=dev
       - name: Run linting
         run: npm run lint
-
       - name: Run tests
         run: npm run test-ci
 
@@ -50,6 +50,5 @@ jobs:
       # script could steal NODE_AUTH_TOKEN.
       - name: Install NPM dependencies
         run: npm install --ignore-scripts --production
-
       - name: Run NPM pack
         run: npm pack
