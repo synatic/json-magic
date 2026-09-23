@@ -822,7 +822,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -849,7 +849,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -882,7 +882,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -910,7 +910,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
