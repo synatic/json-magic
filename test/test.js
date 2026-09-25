@@ -822,7 +822,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -849,7 +849,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -882,7 +882,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -910,7 +910,7 @@ describe('JSON Magic', function () {
                 constructor(message, details = {}) {
                     super(message);
                     for (const detailsKey in details) {
-                        if (details.hasOwnProperty(detailsKey)) {
+                        if (Object.hasOwn(details, detailsKey)) {
                             this[detailsKey] = details[detailsKey];
                         }
                     }
@@ -932,6 +932,46 @@ describe('JSON Magic', function () {
                 message: inner.message,
                 stack: inner.stack,
             });
+        });
+
+        it('should serialize non-JSON error fields for mongo', function () {
+            const error = new Error('Some error');
+            error.code = 'E_FAIL';
+            error.buffer = Buffer.from('abc');
+            error.fn = () => 1;
+            error.big = 10n;
+            error.custom = {toJSON: () => 'custom'};
+
+            const val = $json.fixForMongo(error);
+
+            assert.deepStrictEqual(val, {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+                code: 'E_FAIL',
+                buffer: '[object Buffer]',
+                big: '10n',
+                custom: 'custom',
+            });
+        });
+
+        it('should serialize AggregateError errors for mongo', function () {
+            const inner = new Error('Inner');
+            inner.$innerKey = 1;
+            const error = new AggregateError([inner], 'Outer');
+
+            const val = $json.fixForMongo(error);
+
+            assert.strictEqual(val.name, 'AggregateError');
+            assert.strictEqual(val.message, 'Outer');
+            assert.deepStrictEqual(val.errors, [
+                {
+                    _innerKey: 1,
+                    name: inner.name,
+                    message: inner.message,
+                    stack: inner.stack,
+                },
+            ]);
         });
     });
 
